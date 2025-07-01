@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>アレルギー情報登録</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <p>読み込み中...</p>
+  <script>
+    liff.init({ liffId: "" })
+      .then(() => {
+        if (!liff.isLoggedIn()) {
+          liff.login();  // LINEログインしていない場合
+          return;
+        }
+
+        const idToken = liff.getDecodedIDToken();
+        if (!idToken) {
+          throw new Error("IDトークンが取得できませんでした");
+        }
+
+        const uid = idToken.sub;
+        const encodedUid = encodeURIComponent(uid);
+
+        const formUrl = "https://docs.google.com/forms/d/e/1cJJieexM6gC7bmsgVSIszS7XNzIBV-m5u2XrqsH1sH8/viewform"
+          + "?entry.1016007369=" + encodedUid;
+
+        window.location.href = formUrl;
+      })
+      .catch(err => {
+        document.body.innerHTML = "LIFF初期化に失敗しました：" + err;
+      });
+  </script>
+</body>
+</html>
